@@ -1,0 +1,1575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Word Explorer</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; overflow-x: hidden; }
+    body { font-family: "Nunito", sans-serif; }
+  </style>
+</head>
+<body>
+  <div id="root">
+    <div style="text-align:center;padding:60px 20px;font-family:sans-serif;">
+      <p style="font-size:24px;">Loading Word Explorer...</p>
+      <p style="color:#888;margin-top:12px;">Make sure you are connected to the internet.</p>
+    </div>
+  </div>
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script type="text/babel" data-presets="react">
+    const { useState, useEffect, useCallback, useRef } = React;
+
+
+// --- Built-in word lists by length ---
+const WORD_BANK = {
+  3: ["ace","act","add","ado","ads","aft","age","ago","aid","aim","air","ale","all","amp","and","ant","any","ape","apt","arc","are","ark","arm","art","ash","ask","ate","awe","awl","axe","aye","bad","bag","ban","bar","bat","bay","bed","bee","beg","bet","bib","bid","big","bin","bit","bob","bod","bog","bow","box","boy","bra","bud","bug","bum","bun","bur","bus","but","buy","cab","cad","cam","can","cap","car","cat","cob","cod","cog","cop","cor","cos","cot","cow","cox","coy","cry","cub","cud","cue","cup","cur","cut","dab","dad","dam","day","den","dew","did","die","dig","dim","din","dip","doe","dog","don","dot","dry","dub","dud","due","dug","dun","duo","dye","ear","eat","eel","egg","ego","elm","emu","end","era","eve","ewe","eye","fad","fan","far","fat","fax","fed","fee","fen","few","fib","fig","fin","fir","fit","fix","fly","fob","foe","fog","fop","for","fox","fry","fun","fur","gag","gal","gap","gas","gel","gem","get","gig","gin","gnu","gob","god","got","gum","gun","gut","guy","gym","had","hag","ham","has","hat","hay","hem","hen","her","hew","hex","hid","him","hip","his","hit","hob","hoe","hog","hop","hot","how","hub","hue","hug","hum","hut","ice","icy","ilk","ill","imp","ink","inn","ion","ire","irk","its","ivy","jab","jag","jam","jar","jaw","jay","jet","jig","job","jog","jot","joy","jug","jut","keg","ken","key","kid","kin","kit","lab","lad","lag","lap","law","lax","lay","lea","led","leg","let","lid","lie","lip","lit","log","lot","low","lug","mad","man","map","mar","mat","maw","max","may","men","met","mew","mid","mix","mob","mod","mom","moo","mop","mow","mrs","mud","mug","mum","nab","nag","nap","nay","net","new","nil","nip","nit","nod","nor","not","now","nub","nun","nut","oak","oar","oat","odd","ode","off","oft","ohm","oil","old","one","opt","orb","ore","our","out","owe","owl","own","pad","pal","pan","pap","par","pat","paw","pay","pea","peg","pen","pep","per","pet","pew","pie","pig","pin","pit","ply","pod","pop","pot","pow","pro","pry","pub","pug","pun","pup","pus","put","rag","ram","ran","rap","rat","raw","ray","red","ref","rep","rev","rib","rid","rig","rim","rip","rob","rod","roe","rot","row","rub","rug","rum","run","rut","rye","sac","sad","sag","sap","sat","saw","say","sea","set","sew","she","shy","sin","sip","sir","sis","sit","six","ski","sky","sly","sob","sod","son","sop","sot","sow","soy","spa","spy","sty","sub","sue","sum","sun","sup","tab","tad","tag","tan","tap","tar","tat","tax","tea","ten","the","thy","tic","tie","tin","tip","toe","ton","too","top","tot","tow","toy","try","tub","tug","tun","two","urn","use","van","vat","vet","vie","vim","vow","wad","wag","war","was","wax","way","web","wed","wet","who","why","wig","win","wit","woe","wok","won","woo","wow","yak","yam","yap","yaw","yea","yes","yet","yew","you","zap","zed","zen","zig","zip","zoo"],
+  4: ["able","ache","acid","acme","acne","acre","aged","aide","ally","also","arch","area","army","arts","atom","aunt","auto","avid","away","axle","back","bait","bake","bald","bale","ball","balm","band","bane","bang","bank","bare","bark","barn","base","bash","bass","bath","bays","bead","beak","beam","bean","bear","beat","beds","beef","been","beer","bell","belt","bend","bent","best","bias","bike","bill","bind","bird","bite","bits","bled","blew","blip","blob","bloc","blog","blot","blow","blue","blur","boar","boat","body","boil","bold","bolt","bomb","bond","bone","book","boom","boot","bore","born","boss","both","bout","bowl","bows","brag","brat","bred","brew","brim","bulk","bull","bump","burn","bury","bush","bust","busy","buzz","byte","cafe","cage","cake","calf","call","calm","came","camp","cane","cape","caps","card","care","carp","cart","case","cash","cast","cave","cell","chad","chap","char","chat","chef","chin","chip","chop","cite","city","clad","clam","clan","clap","claw","clay","clip","clog","clot","club","clue","coal","coat","cock","code","coil","coin","cold","colt","comb","come","cone","cook","cool","cope","copy","cord","core","cork","corn","cost","cosy","coup","cove","cozy","crab","crew","crib","crop","crow","crud","cult","curb","cure","curl","cute","czar","daft","dale","dame","damn","damp","dare","dark","darn","dart","dash","data","date","dawn","days","dead","deaf","deal","dean","dear","debt","deck","deed","deem","deep","deer","demo","dent","deny","desk","dial","dice","died","diet","digs","dime","dine","dire","dirt","disc","dish","disk","dock","does","dome","done","doom","door","dose","dots","dove","down","doze","drab","drag","dram","draw","drew","drip","drop","drug","drum","dual","dubs","duck","dude","duel","duet","dull","duly","dumb","dump","dune","dung","dunk","dusk","dust","duty","dyed","dyer","each","earl","earn","ease","east","easy","eats","echo","edge","edgy","edit","else","emit","ends","epic","euro","even","ever","evil","exam","exit","eyed","eyes","face","fact","fade","fail","fair","fake","fall","fame","fang","fare","farm","fast","fate","fawn","faze","fear","feat","feed","feel","fees","feet","fell","felt","fend","fern","fest","feud","file","fill","film","find","fine","fire","firm","fish","fist","five","fizz","flag","flan","flap","flat","flaw","flea","fled","flew","flex","flip","flit","flog","flop","flow","foam","foal","foes","foil","fold","folk","fond","font","food","fool","foot","ford","fore","fork","form","fort","foul","four","fowl","fray","free","from","fuel","full","fume","fund","fung","funk","fury","fuse","fuss","fuzz","gait","gale","gall","game","gang","gape","gash","gasp","gate","gave","gawk","gaze","gear","gene","germ","gift","gild","gill","gilt","girl","gist","give","glad","glen","glib","glob","glom","glow","glue","glum","glut","gnat","gnaw","goat","goes","gold","golf","gone","gong","good","gore","grab","gram","gray","grew","grid","grim","grin","grip","grit","grow","grub","gulf","gull","gulp","gums","gung","gunk","gust","guts","hack","hail","hair","hale","half","hall","halt","hand","hang","hare","hark","harm","harp","hash","hast","hate","haul","have","hawk","haze","hazy","head","heal","heap","hear","heat","heed","heel","held","helm","help","hemp","hens","herb","herd","here","hero","hers","hewn","hide","high","hike","hill","hilt","hind","hint","hips","hire","hits","hive","hoax","hold","hole","holy","home","hone","hood","hoof","hook","hoop","hope","horn","hose","host","hour","howl","hubs","huff","huge","hull","hump","hung","hunk","hunt","hurl","hurt","hush","hymn","hype","ibis","iced","icon","idea","idle","idol","inch","info","into","iron","isle","item","jack","jade","jail","jams","jars","java","jaws","jazz","jean","jeer","jell","jerk","jest","jets","jilt","jinx","jobs","jock","jogs","join","joke","jolt","jots","jowl","joys","judo","jugs","jump","june","junk","jury","just","jute","keen","keep","kelp","kept","keys","kick","kids","kill","kind","king","kink","kiss","kite","kits","knee","knew","knit","knob","knot","know","lace","lack","lacy","laid","lake","lamb","lame","lamp","land","lane","laps","lard","lark","lash","lass","last","late","laud","lawn","laws","lays","lazy","lead","leaf","leak","lean","leap","left","lend","lens","lent","less","levy","liar","lick","lied","lieu","life","lift","like","lily","limb","lime","limp","line","link","lint","lion","lips","list","live","load","loaf","loam","loan","lobe","lock","lode","loft","logo","lone","long","look","loom","loop","loot","lord","lore","lose","loss","lost","lots","loud","love","luck","lull","lump","lure","lurk","lush","lust","lynx","mace","made","maid","mail","main","make","male","mall","malt","mane","many","maps","mare","mark","mars","mash","mask","mass","mast","mate","math","maze","mead","meal","mean","meat","meek","meet","meld","melt","memo","mend","menu","meow","mere","mesh","mess","mice","mild","mile","milk","mill","mime","mind","mine","mint","mire","miss","mist","mite","mitt","moan","moat","mock","mode","mold","mole","molt","monk","mood","moon","moor","moot","more","morn","moss","most","moth","move","much","muck","muff","mugs","mule","mull","mung","murk","muse","mush","musk","must","mute","myth","nabs","nags","nail","name","nape","naps","navy","near","neat","neck","need","neon","nerd","nest","nets","news","next","nice","nick","nine","node","none","nook","noon","nope","norm","nose","note","noun","null","numb","nuts","oafs","oaks","oars","oath","oats","obey","odds","odor","ogle","ogre","oils","oily","okay","omen","omit","once","ones","only","onto","ooze","opal","open","opts","oral","orbs","orca","ores","ours","oust","outs","oven","over","owed","owes","owls","owns","pace","pack","pact","page","paid","pail","pain","pair","pale","palm","pals","pane","pang","pans","pant","papa","pare","park","part","pass","past","path","pave","pawn","paws","pays","peak","peal","pear","peas","peat","peck","peek","peel","peer","pegs","pelt","pend","pens","pent","perk","perm","pert","pest","pets","pick","pier","pigs","pike","pile","pill","pine","pink","pins","pint","pipe","pips","pits","pity","plan","play","plea","pled","plod","plop","plot","plow","ploy","plug","plum","plus","pock","pods","poem","poet","poke","pole","poll","polo","pomp","pond","pony","pool","poor","pope","pops","pore","pork","port","pose","posh","post","pots","pour","pout","pray","prep","prey","prim","prod","prof","prog","prom","prop","pros","prow","pubs","puck","puff","pugs","pull","pulp","pump","puns","pups","pure","purr","push","puts","putt","quid","quiz","race","rack","raft","rage","rags","raid","rail","rain","rake","ramp","rams","rang","rank","rant","raps","rare","rash","rasp","rate","rats","rave","rays","raze","read","real","ream","reap","rear","reed","reef","reel","rein","rely","rend","rent","rest","ribs","rice","rich","ride","rift","rigs","rile","rill","rime","rims","rind","ring","rink","riot","rise","risk","rite","road","roam","roar","robe","robs","rock","rode","rods","roes","role","roll","romp","roof","rook","room","root","rope","rose","rosy","rote","rout","rove","rows","rubs","ruby","rude","rued","rues","ruff","rugs","ruin","rule","rump","rung","runs","runt","ruse","rush","rust","ruts","sack","safe","saga","sage","said","sail","sake","sale","salt","same","sand","sane","sang","sank","sash","save","saws","says","scab","scam","scan","scar","seal","seam","sear","seas","seat","sect","seed","seek","seem","seen","seep","seer","self","sell","semi","send","sent","sept","sewn","shed","shin","ship","shoe","shoo","shop","shot","show","shun","shut","sick","side","sift","sigh","sign","silk","sill","silt","sing","sink","sips","sire","site","sits","size","skit","slab","slag","slam","slap","slat","slaw","slay","sled","slew","slid","slim","slit","slob","slop","slot","slow","slug","slum","slur","smog","snap","snag","snip","snob","snot","snow","snub","snug","soak","soap","soar","sobs","sock","soda","sofa","soft","soil","sold","sole","solo","some","song","sons","soon","soot","sore","sort","soul","soup","sour","span","spar","spat","spec","sped","spew","spin","spit","spot","spry","spud","spun","spur","stab","stag","star","stay","stem","step","stew","stir","stop","stub","stud","stun","subs","such","suck","suds","sued","suit","sulk","sumo","sump","sung","sunk","sure","surf","swan","swap","sway","swim","swop","tabs","tack","tact","tags","tail","take","tale","talk","tall","tame","tamp","tang","tank","tape","taps","tarn","tarp","tart","task","taxi","teak","teal","team","tear","teas","tech","teem","teen","tell","temp","tend","tens","tent","term","tern","test","text","than","that","thaw","them","then","they","thin","this","thud","thug","thus","tick","tidy","tied","tier","ties","tile","till","tilt","time","tine","tint","tiny","tips","tire","toad","toed","toes","toil","told","toll","tomb","tome","tone","tons","took","tool","tops","tore","torn","toss","tour","tout","town","toys","trap","tray","tree","trek","trim","trio","trip","trod","trot","true","tube","tuck","tuft","tugs","tuna","tune","turf","turn","tusk","tutu","twig","twin","twit","type","typo","ugly","undo","unit","unto","upon","urge","used","user","uses","vain","vale","vane","vary","vase","vast","veal","veer","veil","vein","vent","verb","very","vest","veto","vial","vice","vied","view","vile","vine","visa","void","volt","vote","wade","wage","wail","wait","wake","walk","wall","wand","want","ward","warm","warn","warp","wart","wary","wash","wasp","wave","wavy","waxy","ways","weak","wean","wear","webs","weds","weed","week","weep","weld","well","welt","went","wept","were","west","what","when","whom","wick","wide","wife","wigs","wild","will","wilt","wily","wimp","wind","wine","wing","wink","wins","wipe","wire","wise","wish","wisp","with","wits","woke","wolf","womb","wont","wood","woof","wool","word","wore","work","worm","worn","wove","wrap","wren","writ","yack","yank","yard","yarn","year","yell","yelp","yoga","yoke","yolk","your","yowl","yuan","yuck","yule","zany","zeal","zero","zest","zinc","zing","zone","zoom"],
+  5: ["aback","abbot","abide","abort","about","above","abuse","abyss","acids","acorn","acrid","acted","actor","acute","adapt","added","adept","admin","admit","adobe","adopt","adult","aegis","afire","after","again","agent","agile","aging","aglow","agony","agree","ahead","aided","aimed","aired","aisle","alarm","album","alert","algae","alibi","alien","align","alike","alive","allay","alley","allot","allow","alloy","aloft","alone","along","aloof","alpha","altar","alter","amass","amaze","amber","amble","amend","amine","amino","amiss","among","ample","amuse","angel","anger","angle","angry","angst","anime","ankle","annex","annoy","antic","anvil","apart","aphid","apple","apply","apron","aptly","arena","argue","arise","armor","aroma","arose","array","arrow","arson","aside","asset","atlas","atone","attic","audio","audit","augur","aunts","avail","avert","avian","avoid","await","awake","award","aware","awful","axial","axiom","azure","backs","bacon","badge","badly","bagel","baggy","baked","baker","balls","bands","bangs","banjo","banks","baron","basal","based","bases","basic","basil","basin","basis","batch","bathe","baton","beach","beads","beady","beams","beans","beard","bears","beast","beats","beech","began","begin","begun","being","belle","bells","belly","below","bench","berry","bible","bikes","bills","binge","birds","birth","black","blade","blame","bland","blank","blare","blast","blaze","bleak","bleat","bleed","blend","bless","blimp","blind","blink","bliss","blitz","bloat","blobs","block","bloke","blond","blood","bloom","blown","blues","bluff","blunt","blurb","blurt","blush","board","boast","boats","bogus","bolts","bombs","bonds","bones","bonus","books","boost","boots","booze","boozy","borax","bored","bound","boxer","brace","braid","brain","brake","brand","brash","brass","brave","bravo","brawl","brawn","bread","break","breed","brick","bride","brief","brine","bring","brink","briny","brisk","broad","broil","broke","brook","brood","broom","broth","brown","brush","brute","buddy","budge","buggy","build","built","bulge","bulky","bulls","bully","bunch","bunny","burns","burnt","burst","buses","buyer","cabin","cable","cache","cadet","calls","camel","camps","candy","canoe","caper","cards","cargo","carry","carve","cases","catch","cater","cause","caves","cease","cedar","chain","chair","chalk","champ","chant","chaos","chard","charm","chart","chase","cheap","cheat","check","cheek","cheer","chess","chest","chick","chief","child","chili","chill","chime","china","chips","choir","choke","chord","chore","chose","chunk","churn","cider","cigar","cinch","cited","civic","civil","claim","clamp","clams","clang","clank","clash","clasp","class","claws","clean","clear","clerk","click","cliff","climb","cling","clips","cloak","clock","clone","close","cloth","cloud","clout","clown","clubs","cluck","clued","clues","clump","clung","clunk","coach","coals","coast","coats","cocoa","codes","coils","coins","colon","color","comet","comic","comma","conch","condo","cones","coral","corps","couch","could","count","coupe","court","cover","covet","crack","craft","cramp","crane","crash","crate","crave","crawl","crazy","creak","cream","crest","crick","cried","crime","crisp","cross","crowd","crown","crude","cruel","crush","crust","cubic","curry","curse","curve","cycle","daddy","daily","dairy","daisy","dance","dared","dashy","dated","dates","deals","dealt","death","debit","debug","debut","decay","decor","decoy","decry","deeds","deity","delay","delve","demon","denim","dense","depot","depth","derby","desks","detox","devil","diary","digit","dimly","diner","dirty","disco","ditch","ditto","dizzy","dodge","dodgy","doing","dolls","donor","donut","doors","doubt","dough","dozen","draft","drain","drake","drama","drank","drape","drawn","draws","dread","dream","dress","dried","drift","drill","drink","drive","droit","drone","drool","droop","drops","dross","drove","drown","drums","drunk","dryer","dryly","ducal","dully","dummy","dunce","dunes","dusty","dwarf","dwell","dying","eager","eagle","early","earth","eased","eater","eaves","ebbed","ebony","edges","edged","edict","eight","eject","elbow","elder","elect","elite","elude","email","ember","emcee","emoji","empty","ended","endow","enemy","enjoy","enact","ensue","enter","entry","envoy","epoch","equal","equip","erase","erode","error","erupt","essay","ether","ethic","evade","event","every","evict","evoke","exact","exalt","exams","excel","exert","exile","exist","expat","expel","extra","exude","exult","fable","faced","facet","facts","faded","fails","faint","fairy","faith","faked","falls","false","famed","fancy","fangs","farce","farms","fatal","fault","fauna","favor","feast","feats","feeds","feels","feign","feint","fella","felon","fence","ferry","fetch","fetid","fetus","fever","fewer","fiber","fibre","field","fiend","fiery","fifth","fifty","fight","filth","final","finch","finds","finer","fired","fires","firms","first","fishy","fixed","fixer","flags","flair","flake","flaky","flame","flank","flaps","flare","flash","flask","flats","flaxy","flesh","flick","flier","flies","fling","flint","flips","float","flock","flood","floor","flops","flora","flour","flows","fluid","fluke","flung","flunk","flush","flute","focal","focus","foggy","foils","folds","folks","folly","fonts","foods","force","forge","forms","forte","forth","forum","found","foxes","frail","frame","frank","fraud","freak","freed","fresh","friar","fried","frill","frisk","front","frost","froze","fruit","fuels","fully","fumes","funds","fungi","funky","funny","furry","fused","fussy","fuzzy","gains","gamer","games","gamma","gangs","gaped","gases","gauge","gaunt","gauze","gazed","geese","genes","genre","genus","ghost","giant","gifts","given","gives","gland","glare","glass","glaze","gleam","glean","glide","glint","globe","gloom","glory","gloss","glove","gloze","going","goods","goose","gorge","grace","grade","grain","grand","grant","grape","graph","grasp","grass","grate","grave","gravy","graze","great","greed","green","greet","grief","grill","grind","gripe","groan","groin","groom","grope","gross","group","grove","growl","grown","grows","gruel","gruff","grunt","guard","guava","guess","guest","guide","guild","guilt","guise","gulch","gulls","gulps","gummy","gusto","gusty","gypsy","habit","haiku","halls","halve","hands","handy","hangs","happy","hardy","haste","hasty","hatch","haunt","haven","hazel","heads","heady","heart","heave","heavy","hedge","heeds","hefty","heirs","heist","hello","hence","herbs","herds","hippy","hitch","hoard","hobby","hoist","holes","holly","homes","honey","honor","hooks","hoped","hopes","horns","horse","hotel","hound","hours","house","hover","human","humid","humor","humps","hunch","hunts","hurry","hyena","hymns","icing","ideal","ideas","idiom","idiot","image","imply","inbox","incur","index","indie","inept","inert","infer","infra","inner","input","issue","ivory","japan","jelly","jewel","jiffy","jimmy","joker","jolly","joust","judge","juice","juicy","jumbo","jumps","junco","juror","karma","kayak","kebab","keyed","khaki","kicks","kills","knack","knead","kneel","knelt","knife","knits","knock","knoll","knots","known","knows","koala","kudos","label","labor","laced","laden","ladle","lance","lands","lanes","lapse","large","laser","latch","later","latex","lathe","lauds","laugh","layer","leads","leafy","leaky","leaps","learn","lease","least","leave","ledge","legal","lemon","level","lever","light","liked","lilac","limbs","limit","lined","linen","liner","lines","lingo","links","lions","lists","liter","liver","lives","llama","loads","loans","lobby","local","lodge","lofty","logic","loner","looks","loops","loose","lorry","loser","lousy","loved","lover","lower","loyal","lucid","lucky","lumen","lunar","lunch","lunge","lurch","lusty","lying","lynch","lyric","macro","mafia","magic","major","makes","manor","maple","march","marsh","masks","mason","match","mates","maven","mayor","mazes","mealy","means","meant","media","medal","mercy","merge","merit","merry","messy","metal","meter","midst","might","miles","mills","mimic","mince","minds","mined","miner","minor","minus","mirth","miser","misty","mites","mixer","model","modem","mogul","moist","molar","money","monks","month","moose","moral","morph","motel","motif","motto","mound","mount","mourn","mouse","mouth","moved","mover","movie","mowed","mower","muddy","mulch","mural","murky","music","musty","myths","naive","named","names","nanny","nasal","nasty","naval","navel","needs","nerve","never","newer","newly","nexus","niche","night","nimby","noble","nobly","nodes","noise","noisy","nomad","north","notch","noted","notes","novel","nudge","nurse","nutty","nylon","oasis","occur","ocean","oddly","offal","offer","often","olive","omega","onset","opera","opted","optic","orbit","order","organ","other","ought","ounce","outer","outdo","ovals","ovary","overt","owing","owned","owner","oxide","ozone","packs","pages","paint","pairs","palms","panda","panel","panic","pansy","pants","papal","paper","parks","parts","party","pasta","paste","patch","paths","patio","pause","peace","peach","peaks","pearl","pecan","pedal","penal","pence","penny","perch","peril","perks","perky","petal","petty","phase","phone","photo","piano","picks","picky","piece","piggy","piles","pilot","pinch","pines","pitch","pixel","pizza","place","plaid","plain","plane","plank","plans","plant","plate","plaza","plead","pleas","pleat","plied","plods","plots","pluck","plugs","plumb","plume","plump","plums","plunk","plush","poach","poems","point","poise","polar","polls","pools","porch","ports","posed","poser","posse","posts","pouch","pound","power","prank","prawn","press","preys","price","prick","pride","prime","print","prior","prism","privy","prize","probe","prone","prong","proof","prose","proud","prove","prowl","proxy","prude","prune","psalm","pulse","pumps","punch","pupil","puppy","purge","purse","quest","queue","quick","quiet","quill","quilt","quirk","quota","quote","rabbi","racer","radar","radio","rafts","raged","rails","rainy","raise","rally","ranch","range","rapid","raven","reach","reads","ready","realm","reams","rebel","rebus","recap","recon","recur","reefs","reign","relax","relay","remit","renew","repay","repel","reply","resin","retro","rider","ridge","rifle","right","rigid","rigor","rinse","risen","risks","risky","rival","river","rivet","roads","roast","robes","robin","robot","rocks","rocky","rogue","roles","rolls","roman","rooms","roots","roses","rotor","rouge","rough","round","route","rover","royal","ruins","ruled","ruler","rules","rungs","rural","rusty","sadly","safer","saint","salad","sales","salon","salty","salve","sandy","sauce","saucy","sauna","savor","savvy","scale","scalp","scaly","scams","scare","scarf","scary","scene","scent","scrub","scope","score","scout","scowl","scram","scrap","seeds","seize","sense","serve","setup","seven","sever","shade","shady","shaft","shake","shaky","shall","shame","shape","shard","share","shark","sharp","shave","shawl","shear","sheds","sheen","sheep","sheer","sheet","shelf","shell","shift","shine","shiny","ships","shirt","shock","shoes","shone","shook","shoot","shore","short","shout","shove","shown","shows","shrug","shunt","sides","siege","sight","sigma","signs","silks","silky","silly","since","sinew","siren","sites","sixth","sixty","sized","sizes","skate","skimp","skull","skunk","slack","slain","slang","slant","slash","slate","slave","sleek","sleep","sleet","slept","slice","slide","slime","slimy","sling","slope","slots","slump","small","smart","smash","smell","smile","smirk","smith","smock","smoke","smoky","snack","snail","snake","snare","snarl","sneak","sniff","snore","snout","snowy","sober","solar","solid","solve","songs","sonic","sorry","sorts","souls","sound","south","space","spade","spare","spark","spawn","speak","spear","specs","speed","spell","spend","spent","spice","spicy","spied","spike","spill","spine","spite","split","spoke","spoon","spore","sport","spots","spray","spree","sprig","squad","squat","squid","stack","staff","stage","stain","stair","stake","stale","stalk","stall","stamp","stand","stank","stare","stark","stars","start","stash","state","stays","steak","steal","steam","steel","steep","steer","stems","steps","stern","stiff","still","sting","stink","stint","stock","stoic","stoke","stole","stomp","stone","stood","stool","stoop","stops","store","stork","storm","story","stout","stove","strap","straw","stray","strip","strum","strut","stuck","study","stuff","stump","stung","stunk","stunt","style","suave","sugar","suite","sulky","sunny","super","surge","sushi","swamp","swans","swarm","swath","swear","sweat","sweep","sweet","swept","swift","swill","swine","swing","swirl","swore","sworn","swung","syrup","tabby","table","tacit","taken","tales","talks","tally","talon","tango","tanks","taper","tardy","taste","tasty","taunt","taxes","teach","teams","tears","teddy","teeth","tempo","tends","tense","tenth","terms","terse","tests","texts","thank","theft","their","theme","there","these","thick","thief","thigh","thing","think","third","thorn","those","three","threw","throw","thrum","thumb","thump","tidal","tiger","tight","tilts","timer","times","timid","tipsy","tired","titan","title","toast","today","token","tonal","toned","tones","tools","tooth","topic","torch","total","touch","tough","tours","towel","tower","towns","toxic","trace","track","trade","trail","train","trait","tramp","traps","trash","trawl","tread","treat","trend","triad","trial","tribe","trick","tried","trims","trips","trite","troll","troop","troth","trout","truck","truly","trunk","truss","trust","truth","tulip","tumor","tunes","tunic","turns","tutor","twang","tweak","tweed","tweet","twice","twigs","twine","twins","twirl","twist","typed","types","udder","ulcer","ultra","umbra","uncle","uncut","under","undue","undid","unfit","union","unite","unity","unlit","until","unwed","upper","upset","urban","urged","usage","usher","usual","utter","vague","valet","valid","valor","value","valve","vapor","vault","vegan","venom","venue","verge","verse","vigor","vinyl","viola","viper","viral","virus","visor","visit","vista","vital","vivid","vocal","vodka","vogue","voice","voter","vouch","vowel","wacky","waded","wager","wages","wagon","waist","waive","walks","walls","waltz","wands","wants","waste","watch","water","watts","waved","waver","waves","weary","weave","wedge","weeds","weedy","weeks","weigh","weird","wells","whale","wheat","wheel","where","which","while","whine","whirl","whisk","white","whole","whose","widen","wider","widow","width","wield","wings","wiped","wired","witch","witty","wives","woken","woman","women","woods","woody","words","works","world","worms","worry","worse","worst","worth","would","wound","wraps","wrath","wreak","wreck","wring","wrist","write","wrote","yacht","yearn","years","yeast","yield","young","yours","youth","zebra","zippy","zones"]
+};
+
+// Search/filter words from bank
+function searchWords(letters, length, mode) {
+  const bank = WORD_BANK[length] || [];
+  if (!letters.trim()) return bank.slice(0, 60);
+  // Support comma-separated letters like "M,A,P,T" or just "mapt"
+  let chars;
+  if (letters.includes(",")) {
+    chars = letters.split(",").map(s => s.trim().toLowerCase()).filter(s => /^[a-z]$/.test(s));
+  } else {
+    const lower = letters.toLowerCase().replace(/[^a-z]/g, "");
+    chars = lower.split("");
+  }
+  if (chars.length === 0) return bank.slice(0, 60);
+  const charSet = new Set(chars);
+
+  if (mode === "only") {
+    // ONLY mode: every letter in the word must come from the given set
+    return bank.filter(w => {
+      for (const ch of w) {
+        if (!charSet.has(ch)) return false;
+      }
+      return true;
+    }).slice(0, 100);
+  } else {
+    // ANY mode: word must contain at least one of the specified letters
+    return bank.filter(w => {
+      for (const ch of chars) {
+        if (w.includes(ch)) return true;
+      }
+      return false;
+    }).slice(0, 100);
+  }
+}
+
+// Keyboard layout
+const KEYBOARD_ROWS = [
+  ["Q","W","E","R","T","Y","U","I","O","P"],
+  ["A","S","D","F","G","H","J","K","L"],
+  ["ENTER","Z","X","C","V","B","N","M","⌫"]
+];
+
+// Main App
+function WordleForLearners() {
+  const [mode, setMode] = useState("setup"); // setup | play | done
+  const [wordLength, setWordLength] = useState(4);
+  const [wordList, setWordList] = useState([]);
+  const [customInput, setCustomInput] = useState("");
+  const [searchInput, setSearchInput] = useState("");
+  const [searchMode, setSearchMode] = useState("only"); // "only" or "any"
+  const [lessonLetters, setLessonLetters] = useState(""); // the letters for this lesson
+  const [currentWordIndex, setCurrentWordIndex] = useState(0);
+  const [playOrder, setPlayOrder] = useState([]);
+  const [guesses, setGuesses] = useState([]);
+  const [currentGuess, setCurrentGuess] = useState("");
+  const [shake, setShake] = useState(false);
+  const [revealRow, setRevealRow] = useState(-1);
+  const [gameStatus, setGameStatus] = useState("playing"); // playing | won | lost
+  const [letterStates, setLetterStates] = useState({});
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [results, setResults] = useState([]);
+  const [showWordPicker, setShowWordPicker] = useState(false);
+  const maxGuesses = 6;
+
+  const actualIndex = playOrder.length > 0 ? playOrder[currentWordIndex] : currentWordIndex;
+  const targetWord = wordList[actualIndex] ? wordList[actualIndex].toUpperCase() : "";
+
+  // Evaluate a guess against target
+  const evaluate = useCallback((guess, target) => {
+    const result = Array(guess.length).fill("absent");
+    const targetArr = target.split("");
+    const guessArr = guess.split("");
+    // First pass: correct
+    for (let i = 0; i < guessArr.length; i++) {
+      if (guessArr[i] === targetArr[i]) {
+        result[i] = "correct";
+        targetArr[i] = null;
+        guessArr[i] = null;
+      }
+    }
+    // Second pass: present
+    for (let i = 0; i < guessArr.length; i++) {
+      if (guessArr[i] === null) continue;
+      const idx = targetArr.indexOf(guessArr[i]);
+      if (idx !== -1) {
+        result[i] = "present";
+        targetArr[idx] = null;
+      }
+    }
+    return result;
+  }, []);
+
+  // Submit guess
+  const submitGuess = useCallback(() => {
+    if (currentGuess.length !== wordLength || gameStatus !== "playing") return;
+
+    const result = evaluate(currentGuess, targetWord);
+    const newGuesses = [...guesses, { word: currentGuess, result }];
+    setGuesses(newGuesses);
+    setRevealRow(newGuesses.length - 1);
+    setCurrentGuess("");
+
+    // Update letter states
+    const newStates = { ...letterStates };
+    for (let i = 0; i < currentGuess.length; i++) {
+      const letter = currentGuess[i];
+      const state = result[i];
+      if (state === "correct") newStates[letter] = "correct";
+      else if (state === "present" && newStates[letter] !== "correct") newStates[letter] = "present";
+      else if (!newStates[letter]) newStates[letter] = "absent";
+    }
+    setLetterStates(newStates);
+
+    // Check win/lose
+    if (currentGuess === targetWord) {
+      setTimeout(() => {
+        setGameStatus("won");
+        setShowSuccess(true);
+      }, wordLength * 300 + 200);
+    } else if (newGuesses.length >= maxGuesses) {
+      setTimeout(() => setGameStatus("lost"), wordLength * 300 + 200);
+    }
+  }, [currentGuess, wordLength, targetWord, guesses, gameStatus, letterStates, evaluate]);
+
+  // Handle keyboard
+  const handleKey = useCallback((key) => {
+    if (gameStatus !== "playing") return;
+    if (key === "ENTER") {
+      if (currentGuess.length === wordLength) submitGuess();
+      else { setShake(true); setTimeout(() => setShake(false), 500); }
+    } else if (key === "⌫" || key === "BACKSPACE") {
+      setCurrentGuess(prev => prev.slice(0, -1));
+    } else if (/^[A-Z]$/.test(key) && currentGuess.length < wordLength) {
+      setCurrentGuess(prev => prev + key);
+    }
+  }, [currentGuess, wordLength, gameStatus, submitGuess]);
+
+  // Physical keyboard
+  useEffect(() => {
+    if (mode !== "play") return;
+    const handler = (e) => {
+      const k = e.key.toUpperCase();
+      if (k === "ENTER" || k === "BACKSPACE" || (/^[A-Z]$/.test(k) && k.length === 1)) {
+        e.preventDefault();
+        handleKey(k);
+      }
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [mode, handleKey]);
+
+  // Move to next word
+  const nextWord = () => {
+    const r = { word: targetWord, guesses: guesses.length, won: gameStatus === "won" };
+    setResults(prev => [...prev, r]);
+    if (currentWordIndex + 1 < wordList.length) {
+      setCurrentWordIndex(prev => prev + 1);
+      setGuesses([]);
+      setCurrentGuess("");
+      setGameStatus("playing");
+      setLetterStates({});
+      setRevealRow(-1);
+      setShowSuccess(false);
+    } else {
+      setResults(prev => [...prev.slice(0, -1), r]);
+      setMode("done");
+    }
+  };
+
+  // Add word to list
+  const addWord = (w) => {
+    const clean = w.toLowerCase().replace(/[^a-z]/g, "");
+    if (clean.length !== wordLength) return;
+    if (wordList.includes(clean)) return;
+    setWordList(prev => [...prev, clean]);
+    setCustomInput("");
+  };
+
+  const removeWord = (idx) => setWordList(prev => prev.filter((_, i) => i !== idx));
+
+  const startGame = () => {
+    if (wordList.length === 0) return;
+    // Shuffle: create array of indices and randomize
+    var indices = [];
+    for (var i = 0; i < wordList.length; i++) indices.push(i);
+    for (var j = indices.length - 1; j > 0; j--) {
+      var k = Math.floor(Math.random() * (j + 1));
+      var temp = indices[j];
+      indices[j] = indices[k];
+      indices[k] = temp;
+    }
+    setPlayOrder(indices);
+    setCurrentWordIndex(0);
+    setGuesses([]);
+    setCurrentGuess("");
+    setGameStatus("playing");
+    setLetterStates({});
+    setRevealRow(-1);
+    setShowSuccess(false);
+    setResults([]);
+    setMode("play");
+  };
+
+  const resetAll = () => {
+    setMode("setup");
+    setWordList([]);
+    setCustomInput("");
+    setSearchInput("");
+    setLessonLetters("");
+    setPlayOrder([]);
+    setCurrentWordIndex(0);
+    setGuesses([]);
+    setCurrentGuess("");
+    setGameStatus("playing");
+    setLetterStates({});
+    setRevealRow(-1);
+    setShowSuccess(false);
+    setResults([]);
+  };
+
+  // Filtered word suggestions
+  const suggestions = searchWords(searchInput, wordLength, searchMode);
+
+  return (
+    <div style={styles.container}>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800&display=swap');
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @keyframes popIn {
+          0% { transform: scale(0.8); opacity: 0; }
+          50% { transform: scale(1.1); }
+          100% { transform: scale(1); opacity: 1; }
+        }
+        @keyframes flipIn {
+          0% { transform: rotateX(0); }
+          50% { transform: rotateX(90deg); }
+          100% { transform: rotateX(0); }
+        }
+        @keyframes shakeRow {
+          0%, 100% { transform: translateX(0); }
+          20% { transform: translateX(-8px); }
+          40% { transform: translateX(8px); }
+          60% { transform: translateX(-6px); }
+          80% { transform: translateX(6px); }
+        }
+        @keyframes bounceIn {
+          0% { transform: scale(0); opacity: 0; }
+          50% { transform: scale(1.2); }
+          70% { transform: scale(0.95); }
+          100% { transform: scale(1); opacity: 1; }
+        }
+        @keyframes confetti {
+          0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+          100% { transform: translateY(-200px) rotate(720deg); opacity: 0; }
+        }
+        @keyframes starBurst {
+          0% { transform: scale(0) rotate(0deg); opacity: 1; }
+          100% { transform: scale(2) rotate(180deg); opacity: 0; }
+        }
+        @keyframes slideUp {
+          from { transform: translateY(20px); opacity: 0; }
+          to { transform: translateY(0); opacity: 1; }
+        }
+        @keyframes gentlePulse {
+          0%, 100% { transform: scale(1); }
+          50% { transform: scale(1.03); }
+        }
+        @keyframes float {
+          0%, 100% { transform: translateY(0px); }
+          50% { transform: translateY(-6px); }
+        }
+        @media (max-width: 640px) {
+          .play-outer-responsive {
+            flex-direction: column !important;
+            align-items: center !important;
+          }
+          .word-bank-responsive {
+            width: 100% !important;
+            position: static !important;
+            max-height: none !important;
+          }
+          .word-bank-list-responsive {
+            flex-direction: row !important;
+            flex-wrap: wrap !important;
+            max-height: 120px !important;
+          }
+        }
+      `}</style>
+
+      {/* HEADER */}
+      <div style={styles.header}>
+        <div style={styles.headerInner}>
+          <span style={styles.headerIcon}>✨</span>
+          <h1 style={styles.title}>Word Explorer</h1>
+          <span style={styles.headerIcon}>✨</span>
+        </div>
+        {mode === "play" && (
+          <div style={styles.progress}>
+            Word {currentWordIndex + 1} of {wordList.length}
+            <div style={styles.progressBar}>
+              <div style={{...styles.progressFill, width: `${((currentWordIndex + (gameStatus !== "playing" ? 1 : 0)) / wordList.length) * 100}%`}} />
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* SETUP MODE */}
+      {mode === "setup" && (
+        <div style={styles.setupContainer}>
+          {/* Step 1: Word Length */}
+          <div style={styles.card}>
+            <h2 style={styles.cardTitle}>
+              <span style={styles.stepBadge}>1</span>
+              Choose Word Length
+            </h2>
+            <div style={styles.lengthButtons}>
+              {[3, 4, 5].map(n => (
+                <button
+                  key={n}
+                  onClick={() => { setWordLength(n); setWordList([]); }}
+                  style={{
+                    ...styles.lengthBtn,
+                    ...(wordLength === n ? styles.lengthBtnActive : {}),
+                  }}
+                >
+                  <span style={styles.lengthNum}>{n}</span>
+                  <span style={styles.lengthLabel}>letters</span>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Step 2: Lesson Letters */}
+          <div style={styles.card}>
+            <h2 style={styles.cardTitle}>
+              <span style={styles.stepBadge}>2</span>
+              Enter Your Lesson Letters
+            </h2>
+            <p style={{ fontSize: "14px", color: colors.textLight, marginBottom: "12px", lineHeight: 1.5 }}>
+              Type the letters for this lesson, just like on a worksheet. Words will be found using <strong>only</strong> these letters.
+            </p>
+            <input
+              type="text"
+              value={lessonLetters}
+              onChange={e => {
+                const val = e.target.value.replace(/[^a-zA-Z,\s]/g, "");
+                setLessonLetters(val);
+                setSearchInput(val);
+                if (!val.trim()) setSearchMode("only");
+              }}
+              placeholder="e.g. A, B, C, J, M, R"
+              style={{ ...styles.textInput, fontSize: "22px", textAlign: "center", letterSpacing: "4px", textTransform: "uppercase" }}
+            />
+
+            {/* Display lesson letters as visual boxes */}
+            {(() => {
+              let chars;
+              if (lessonLetters.includes(",")) {
+                chars = lessonLetters.split(",").map(s => s.trim().toUpperCase()).filter(s => /^[A-Z]$/.test(s));
+              } else {
+                chars = lessonLetters.toUpperCase().replace(/[^A-Z]/g, "").split("");
+              }
+              chars = [...new Set(chars)];
+              if (chars.length === 0) return null;
+              return (
+                <div style={styles.lessonLetterBoxes}>
+                  {chars.map((ch, i) => (
+                    <div key={i} style={styles.lessonLetterBox}>
+                      {ch}
+                    </div>
+                  ))}
+                </div>
+              );
+            })()}
+          </div>
+
+          {/* Step 3: Pick Words */}
+          <div style={styles.card}>
+            <h2 style={styles.cardTitle}>
+              <span style={styles.stepBadge}>3</span>
+              Pick Words for the Lesson
+            </h2>
+
+            {/* Search mode toggle */}
+            <div style={styles.modeToggle}>
+              <button
+                onClick={() => setSearchMode("only")}
+                style={{
+                  ...styles.modeBtn,
+                  ...(searchMode === "only" ? styles.modeBtnActive : {}),
+                }}
+              >
+                🎯 Made from ONLY these letters
+              </button>
+              <button
+                onClick={() => setSearchMode("any")}
+                style={{
+                  ...styles.modeBtn,
+                  ...(searchMode === "any" ? styles.modeBtnActive : {}),
+                }}
+              >
+                🔍 Contains ANY of these letters
+              </button>
+            </div>
+
+            {/* Results count */}
+            {searchInput.trim() && suggestions.length > 0 && (
+              <p style={{ fontSize: "14px", color: colors.textLight, margin: "12px 0 6px", fontWeight: 700 }}>
+                {searchMode === "only" ? "🎯 " : "🔍 "}
+                {suggestions.length} words found
+                {suggestions.length >= 100 ? " (showing first 100)" : ""}
+                {suggestions.length > 0 && (
+                  <button
+                    onClick={() => {
+                      const newWords = suggestions.filter(w => w.length === wordLength && !wordList.includes(w));
+                      setWordList(prev => [...prev, ...newWords]);
+                    }}
+                    style={styles.addAllBtn}
+                  >
+                    Add All ✓
+                  </button>
+                )}
+              </p>
+            )}
+            {searchInput.trim() && suggestions.length === 0 && (
+              <p style={{ fontSize: "14px", color: colors.primary, margin: "12px 0 6px", fontWeight: 600 }}>
+                No words found — {searchMode === "only" ? "try adding more letters above!" : "try different letters!"}
+              </p>
+            )}
+
+            {/* Suggestions grid */}
+            <div style={styles.suggestionsGrid}>
+              {suggestions.map(w => {
+                const added = wordList.includes(w);
+                return (
+                  <button
+                    key={w}
+                    onClick={() => !added && addWord(w)}
+                    style={{
+                      ...styles.suggestionChip,
+                      ...(added ? styles.suggestionChipAdded : {}),
+                    }}
+                    disabled={added}
+                  >
+                    {w.toUpperCase()}
+                    {added && <span style={styles.checkMark}> ✓</span>}
+                  </button>
+                );
+              })}
+              {!searchInput.trim() && (
+                <p style={styles.noResults}>Enter your lesson letters in Step 2 to see matching words here!</p>
+              )}
+            </div>
+
+            {/* Divider for custom entry */}
+            <div style={styles.divider}>
+              <span style={styles.dividerText}>or add a custom word</span>
+            </div>
+
+            <div style={styles.inputRow}>
+              <input
+                type="text"
+                value={customInput}
+                onChange={e => setCustomInput(e.target.value.replace(/[^a-zA-Z]/g, "").slice(0, wordLength))}
+                onKeyDown={e => { if (e.key === "Enter") addWord(customInput); }}
+                placeholder={`Type a ${wordLength}-letter word...`}
+                style={styles.textInput}
+                maxLength={wordLength}
+              />
+              <button
+                onClick={() => addWord(customInput)}
+                disabled={customInput.length !== wordLength}
+                style={{
+                  ...styles.addBtn,
+                  ...(customInput.length !== wordLength ? styles.addBtnDisabled : {}),
+                }}
+              >
+                Add ✓
+              </button>
+            </div>
+          </div>
+
+          {/* Step 4: Word List & Play */}
+          <div style={styles.card}>
+            <h2 style={styles.cardTitle}>
+              <span style={styles.stepBadge}>4</span>
+              Your Words ({wordList.length})
+            </h2>
+            {wordList.length === 0 ? (
+              <p style={styles.emptyList}>Pick some words above to get started!</p>
+            ) : (
+              <div style={styles.wordListGrid}>
+                {wordList.map((w, i) => (
+                  <div key={i} style={styles.wordListItem} className="word-item">
+                    <span style={styles.wordListWord}>{w.toUpperCase()}</span>
+                    <button onClick={() => removeWord(i)} style={styles.removeBtn}>✕</button>
+                  </div>
+                ))}
+              </div>
+            )}
+            {wordList.length > 0 && (
+              <button onClick={startGame} style={styles.playButton}>
+                🎮 Let's Play! ({wordList.length} word{wordList.length !== 1 ? "s" : ""})
+              </button>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* PLAY MODE */}
+      {mode === "play" && (
+        <div style={styles.playOuter} className="play-outer-responsive">
+          {/* Word Bank Sidebar */}
+          <div style={styles.wordBankSidebar} className="word-bank-responsive">
+            <div style={styles.wordBankHeader}>
+              <span style={{ fontSize: "20px" }}>📖</span>
+              <span style={styles.wordBankTitle}>Word Bank</span>
+            </div>
+            <div style={styles.wordBankList} className="word-bank-list-responsive">
+              {wordList.map((w, i) => {
+                const isFound = results.some(function(r) { return r.word === w.toUpperCase() && r.won; });
+                return (
+                  <div
+                    key={i}
+                    style={{
+                      ...styles.wordBankItem,
+                      ...(isFound ? styles.wordBankItemFound : {}),
+                    }}
+                  >
+                    <span style={{
+                      ...styles.wordBankWord,
+                      ...(isFound ? { textDecoration: "line-through", opacity: 0.5 } : {}),
+                    }}>{w.toUpperCase()}</span>
+                    {isFound && (
+                      <span style={{ fontSize: "16px" }}>✅</span>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Main Game Area */}
+          <div style={styles.playContainer}>
+            {/* Lesson Letters Display */}
+            {lessonLetters.trim() && (() => {
+              let chars;
+              if (lessonLetters.includes(",")) {
+                chars = lessonLetters.split(",").map(s => s.trim().toUpperCase()).filter(s => /^[A-Z]$/.test(s));
+              } else {
+                chars = lessonLetters.toUpperCase().replace(/[^A-Z]/g, "").split("");
+              }
+              chars = [...new Set(chars)];
+              if (chars.length === 0) return null;
+              return (
+                <div style={styles.playLettersBar}>
+                  <span style={styles.playLettersLabel}>Your Letters:</span>
+                  <div style={styles.playLettersRow}>
+                    {chars.map((ch, i) => (
+                      <div key={i} style={styles.playLetterBox}>{ch}</div>
+                    ))}
+                  </div>
+                </div>
+              );
+            })()}
+
+            {/* Grid */}
+            <div style={styles.gridWrapper}>
+              {Array.from({ length: maxGuesses }).map((_, rowIdx) => {
+                const guess = guesses[rowIdx];
+                const isCurrent = rowIdx === guesses.length && gameStatus === "playing";
+                const isShaking = isCurrent && shake;
+                const isRevealing = rowIdx === revealRow;
+
+                return (
+                  <div
+                    key={rowIdx}
+                    style={{
+                      ...styles.row,
+                      ...(isShaking ? { animation: "shakeRow 0.5s ease" } : {}),
+                    }}
+                  >
+                    {Array.from({ length: wordLength }).map((_, colIdx) => {
+                      let letter = "";
+                      let cellStyle = styles.cellEmpty;
+
+                      if (guess) {
+                        letter = guess.word[colIdx];
+                        const state = guess.result[colIdx];
+                        cellStyle = state === "correct" ? styles.cellCorrect
+                          : state === "present" ? styles.cellPresent
+                          : styles.cellAbsent;
+                        if (isRevealing) {
+                          cellStyle = {
+                            ...cellStyle,
+                            animation: `flipIn 0.5s ease ${colIdx * 0.15}s both`,
+                          };
+                        }
+                      } else if (isCurrent) {
+                        letter = currentGuess[colIdx] || "";
+                        const isFullMatch = currentGuess.length === wordLength &&
+                          wordList.some(function(w) { return w.toUpperCase() === currentGuess; });
+                        if (letter) {
+                          if (isFullMatch) {
+                            cellStyle = {
+                              ...styles.cellMatch,
+                              animation: "popIn 0.15s ease",
+                            };
+                          } else {
+                            cellStyle = {
+                              ...styles.cellFilled,
+                              animation: "popIn 0.15s ease",
+                            };
+                          }
+                        }
+                      }
+
+                      return (
+                        <div key={colIdx} style={{ ...styles.cell, ...cellStyle }}>
+                          <span style={styles.cellLetter}>{letter}</span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Match hint */}
+            {gameStatus === "playing" && currentGuess.length === wordLength &&
+              wordList.some(function(w) { return w.toUpperCase() === currentGuess; }) && (
+              <div style={styles.matchHint}>
+                ✨ That's a word! Press <strong>✓</strong> to submit!
+              </div>
+            )}
+
+            {/* Win/Lose overlay */}
+            {gameStatus === "won" && showSuccess && (
+              <div style={styles.resultOverlay}>
+                <div style={{ ...styles.resultCard, animation: "bounceIn 0.6s ease" }}>
+                  <div style={styles.confettiContainer}>
+                    {["🌟","⭐","🎉","💫","✨","🌈","🎊","💖"].map((e, i) => (
+                      <span key={i} style={{
+                        position: "absolute",
+                        fontSize: "24px",
+                        left: `${10 + (i * 12)}%`,
+                        top: "20%",
+                        animation: `confetti 1.5s ease ${i * 0.1}s forwards`,
+                      }}>{e}</span>
+                    ))}
+                  </div>
+                  <div style={styles.resultEmoji}>🎉</div>
+                  <h2 style={styles.resultTitle}>Amazing Job!</h2>
+                  <p style={styles.resultText}>
+                    You found <strong>{targetWord}</strong> in {guesses.length} {guesses.length === 1 ? "try" : "tries"}!
+                  </p>
+                  <button onClick={nextWord} style={styles.nextButton}>
+                    {currentWordIndex + 1 < wordList.length ? "Next Word →" : "See Results 🏆"}
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {gameStatus === "lost" && (
+              <div style={styles.resultOverlay}>
+                <div style={{ ...styles.resultCard, animation: "bounceIn 0.6s ease" }}>
+                  <div style={styles.resultEmoji}>💪</div>
+                  <h2 style={styles.resultTitle}>Good Try!</h2>
+                  <p style={styles.resultText}>
+                    The word was <strong>{targetWord}</strong>. Keep going, you're doing great!
+                  </p>
+                  <button onClick={nextWord} style={styles.nextButton}>
+                    {currentWordIndex + 1 < wordList.length ? "Next Word →" : "See Results 🏆"}
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* Keyboard */}
+            <div style={styles.keyboard}>
+              {(() => {
+                // Compute lesson letter set for highlighting
+                let lessonSet = new Set();
+                if (lessonLetters.trim()) {
+                  let chars;
+                  if (lessonLetters.includes(",")) {
+                    chars = lessonLetters.split(",").map(s => s.trim().toUpperCase()).filter(s => /^[A-Z]$/.test(s));
+                  } else {
+                    chars = lessonLetters.toUpperCase().replace(/[^A-Z]/g, "").split("");
+                  }
+                  lessonSet = new Set(chars);
+                }
+                return KEYBOARD_ROWS.map((row, ri) => (
+                  <div key={ri} style={styles.keyboardRow}>
+                    {row.map(key => {
+                      const state = letterStates[key];
+                      const isLesson = lessonSet.size > 0 && lessonSet.has(key);
+                      const isNonLesson = lessonSet.size > 0 && !lessonSet.has(key) && key !== "ENTER" && key !== "⌫";
+                      let keyStyle = styles.key;
+                      if (key === "ENTER") keyStyle = { ...styles.key, ...styles.keyWide, ...styles.keyEnter };
+                      else if (key === "⌫") keyStyle = { ...styles.key, ...styles.keyWide, ...styles.keyDelete };
+                      else if (state === "correct") keyStyle = { ...styles.key, ...styles.keyCorrect };
+                      else if (state === "present") keyStyle = { ...styles.key, ...styles.keyPresent };
+                      else if (state === "absent") keyStyle = { ...styles.key, ...styles.keyAbsent };
+                      else if (isLesson) keyStyle = { ...styles.key, ...styles.keyLesson };
+                      if (isNonLesson && !state) keyStyle = { ...keyStyle, ...styles.keyDimmed };
+
+                      return (
+                        <button
+                          key={key}
+                          onClick={() => handleKey(key)}
+                          style={keyStyle}
+                        >
+                          {key === "ENTER" ? "✓" : key}
+                        </button>
+                      );
+                    })}
+                  </div>
+                ));
+              })()}
+            </div>
+
+            {/* Back button */}
+            <button onClick={resetAll} style={styles.backButton}>
+              ← Back to Setup
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* DONE MODE */}
+      {mode === "done" && (
+        <div style={styles.doneContainer}>
+          <div style={{ ...styles.doneCard, animation: "slideUp 0.5s ease" }}>
+            <div style={styles.resultEmoji}>🏆</div>
+            <h2 style={styles.doneTitle}>All Done!</h2>
+            <div style={styles.scoreBoard}>
+              {[...results, { word: targetWord, guesses: guesses.length, won: gameStatus === "won" }].map((r, i) => (
+                <div key={i} style={styles.scoreRow}>
+                  <span style={styles.scoreWord}>{r.word}</span>
+                  <span style={{
+                    ...styles.scoreBadge,
+                    ...(r.won ? styles.scoreBadgeWon : styles.scoreBadgeLost),
+                  }}>
+                    {r.won ? `${r.guesses} ${r.guesses === 1 ? "try" : "tries"} ⭐` : "Keep practicing 💪"}
+                  </span>
+                </div>
+              ))}
+            </div>
+            <div style={styles.doneStats}>
+              <div style={styles.statBox}>
+                <span style={styles.statNum}>
+                  {[...results, { won: gameStatus === "won" }].filter(r => r.won).length}
+                </span>
+                <span style={styles.statLabel}>Words Found</span>
+              </div>
+              <div style={styles.statBox}>
+                <span style={styles.statNum}>
+                  {[...results, { won: gameStatus === "won" }].length}
+                </span>
+                <span style={styles.statLabel}>Words Total</span>
+              </div>
+            </div>
+            <button onClick={resetAll} style={styles.playButton}>
+              🔄 Play Again
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// --- STYLES ---
+const colors = {
+  bg: "#FFF8F0",
+  card: "#FFFFFF",
+  primary: "#FF6B6B",
+  primaryDark: "#E55A5A",
+  secondary: "#4ECDC4",
+  secondaryDark: "#3BA99F",
+  accent: "#FFE66D",
+  purple: "#A78BFA",
+  correct: "#6BCB77",
+  present: "#FFD93D",
+  absent: "#CBD5E1",
+  absentDark: "#94A3B8",
+  text: "#2D3436",
+  textLight: "#636E72",
+  textMuted: "#B2BEC3",
+  border: "#E8E8E8",
+  shadow: "0 4px 20px rgba(0,0,0,0.08)",
+  shadowLg: "0 8px 32px rgba(0,0,0,0.12)",
+};
+
+const styles = {
+  container: {
+    minHeight: "100vh",
+    background: `linear-gradient(160deg, ${colors.bg} 0%, #FFF0F0 30%, #F0F8FF 60%, #F0FFF4 100%)`,
+    fontFamily: "'Nunito', sans-serif",
+    paddingBottom: "40px",
+  },
+  header: {
+    textAlign: "center",
+    padding: "24px 16px 16px",
+    position: "sticky",
+    top: 0,
+    background: "rgba(255,248,240,0.95)",
+    backdropFilter: "blur(10px)",
+    zIndex: 100,
+    borderBottom: "2px solid rgba(255,107,107,0.15)",
+  },
+  headerInner: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: "12px",
+  },
+  headerIcon: {
+    fontSize: "24px",
+    animation: "float 3s ease-in-out infinite",
+  },
+  title: {
+    fontFamily: "'Fredoka', sans-serif",
+    fontSize: "clamp(28px, 5vw, 40px)",
+    fontWeight: 700,
+    background: `linear-gradient(135deg, ${colors.primary}, ${colors.purple})`,
+    WebkitBackgroundClip: "text",
+    WebkitTextFillColor: "transparent",
+    letterSpacing: "-0.5px",
+  },
+  progress: {
+    marginTop: "8px",
+    fontSize: "14px",
+    fontWeight: 700,
+    color: colors.textLight,
+  },
+  progressBar: {
+    width: "200px",
+    height: "8px",
+    background: colors.border,
+    borderRadius: "4px",
+    margin: "6px auto 0",
+    overflow: "hidden",
+  },
+  progressFill: {
+    height: "100%",
+    background: `linear-gradient(90deg, ${colors.secondary}, ${colors.correct})`,
+    borderRadius: "4px",
+    transition: "width 0.5s ease",
+  },
+
+  // Setup
+  setupContainer: {
+    maxWidth: "680px",
+    margin: "0 auto",
+    padding: "20px 16px",
+    display: "flex",
+    flexDirection: "column",
+    gap: "20px",
+  },
+  card: {
+    background: colors.card,
+    borderRadius: "20px",
+    padding: "24px",
+    boxShadow: colors.shadow,
+    border: "1px solid rgba(0,0,0,0.04)",
+  },
+  cardTitle: {
+    fontFamily: "'Fredoka', sans-serif",
+    fontSize: "20px",
+    fontWeight: 600,
+    color: colors.text,
+    marginBottom: "16px",
+    display: "flex",
+    alignItems: "center",
+    gap: "10px",
+  },
+  stepBadge: {
+    display: "inline-flex",
+    alignItems: "center",
+    justifyContent: "center",
+    width: "32px",
+    height: "32px",
+    borderRadius: "50%",
+    background: `linear-gradient(135deg, ${colors.primary}, ${colors.primaryDark})`,
+    color: "#fff",
+    fontSize: "16px",
+    fontWeight: 700,
+    flexShrink: 0,
+  },
+  lengthButtons: {
+    display: "flex",
+    gap: "12px",
+    justifyContent: "center",
+  },
+  lengthBtn: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    padding: "16px 28px",
+    borderRadius: "16px",
+    border: `2px solid ${colors.border}`,
+    background: "#FAFAFA",
+    cursor: "pointer",
+    transition: "all 0.2s ease",
+    fontFamily: "'Fredoka', sans-serif",
+  },
+  lengthBtnActive: {
+    border: `3px solid ${colors.secondary}`,
+    background: `linear-gradient(135deg, ${colors.secondary}15, ${colors.secondary}08)`,
+    transform: "scale(1.05)",
+    boxShadow: `0 4px 16px ${colors.secondary}30`,
+  },
+  lengthNum: {
+    fontSize: "32px",
+    fontWeight: 700,
+    color: colors.text,
+    lineHeight: 1,
+  },
+  lengthLabel: {
+    fontSize: "13px",
+    color: colors.textLight,
+    marginTop: "4px",
+  },
+  lessonLetterBoxes: {
+    display: "flex",
+    flexWrap: "wrap",
+    gap: "8px",
+    justifyContent: "center",
+    marginTop: "16px",
+  },
+  lessonLetterBox: {
+    width: "52px",
+    height: "52px",
+    borderRadius: "12px",
+    border: `3px solid ${colors.text}`,
+    background: "#FFFFFF",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    fontFamily: "'Fredoka', sans-serif",
+    fontSize: "28px",
+    fontWeight: 700,
+    color: colors.text,
+    boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+  },
+  playLettersBar: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    gap: "6px",
+    marginBottom: "6px",
+    padding: "10px 16px",
+    background: colors.card,
+    borderRadius: "14px",
+    boxShadow: colors.shadow,
+  },
+  playLettersLabel: {
+    fontSize: "12px",
+    fontWeight: 700,
+    color: colors.textMuted,
+    textTransform: "uppercase",
+    letterSpacing: "1px",
+  },
+  playLettersRow: {
+    display: "flex",
+    gap: "6px",
+    flexWrap: "wrap",
+    justifyContent: "center",
+  },
+  playLetterBox: {
+    width: "38px",
+    height: "38px",
+    borderRadius: "8px",
+    border: `2.5px solid ${colors.text}`,
+    background: "#FFFFFF",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    fontFamily: "'Fredoka', sans-serif",
+    fontSize: "20px",
+    fontWeight: 700,
+    color: colors.text,
+  },
+  addAllBtn: {
+    display: "inline-block",
+    marginLeft: "10px",
+    padding: "4px 14px",
+    borderRadius: "8px",
+    border: "none",
+    background: `linear-gradient(135deg, ${colors.secondary}, ${colors.secondaryDark})`,
+    color: "#fff",
+    fontSize: "12px",
+    fontWeight: 700,
+    fontFamily: "'Fredoka', sans-serif",
+    cursor: "pointer",
+    verticalAlign: "middle",
+  },
+  inputSection: { marginBottom: "12px" },
+  inputLabel: {
+    display: "block",
+    fontSize: "14px",
+    fontWeight: 700,
+    color: colors.textLight,
+    marginBottom: "8px",
+  },
+  inputRow: {
+    display: "flex",
+    gap: "8px",
+  },
+  textInput: {
+    flex: 1,
+    padding: "14px 16px",
+    borderRadius: "12px",
+    border: `2px solid ${colors.border}`,
+    fontSize: "18px",
+    fontFamily: "'Fredoka', sans-serif",
+    letterSpacing: "2px",
+    textTransform: "uppercase",
+    outline: "none",
+    transition: "border-color 0.2s",
+    background: "#FAFAFA",
+  },
+  charCount: {
+    fontSize: "12px",
+    color: colors.textMuted,
+    marginTop: "4px",
+    textAlign: "right",
+  },
+  modeToggle: {
+    display: "flex",
+    gap: "8px",
+    marginTop: "10px",
+    flexWrap: "wrap",
+  },
+  modeBtn: {
+    flex: 1,
+    minWidth: "180px",
+    padding: "10px 14px",
+    borderRadius: "10px",
+    border: `2px solid ${colors.border}`,
+    background: "#FAFAFA",
+    fontSize: "13px",
+    fontWeight: 700,
+    fontFamily: "'Nunito', sans-serif",
+    cursor: "pointer",
+    transition: "all 0.2s ease",
+    color: colors.textLight,
+  },
+  modeBtnActive: {
+    border: `2px solid ${colors.purple}`,
+    background: `${colors.purple}12`,
+    color: colors.purple,
+    boxShadow: `0 2px 8px ${colors.purple}20`,
+  },
+  addBtn: {
+    padding: "14px 24px",
+    borderRadius: "12px",
+    border: "none",
+    background: `linear-gradient(135deg, ${colors.secondary}, ${colors.secondaryDark})`,
+    color: "#fff",
+    fontSize: "16px",
+    fontWeight: 700,
+    fontFamily: "'Fredoka', sans-serif",
+    cursor: "pointer",
+    transition: "all 0.2s ease",
+    whiteSpace: "nowrap",
+  },
+  addBtnDisabled: {
+    opacity: 0.4,
+    cursor: "not-allowed",
+  },
+  divider: {
+    textAlign: "center",
+    margin: "16px 0",
+    position: "relative",
+    borderTop: `1px solid ${colors.border}`,
+  },
+  dividerText: {
+    display: "inline-block",
+    background: colors.card,
+    padding: "0 12px",
+    position: "relative",
+    top: "-10px",
+    fontSize: "13px",
+    color: colors.textMuted,
+    fontWeight: 600,
+  },
+  suggestionsGrid: {
+    display: "flex",
+    flexWrap: "wrap",
+    gap: "8px",
+    maxHeight: "360px",
+    overflowY: "auto",
+    padding: "4px",
+  },
+  suggestionChip: {
+    padding: "10px 16px",
+    borderRadius: "10px",
+    border: `2px solid ${colors.border}`,
+    background: "#FAFAFA",
+    fontSize: "16px",
+    fontWeight: 700,
+    fontFamily: "'Fredoka', sans-serif",
+    letterSpacing: "1px",
+    cursor: "pointer",
+    transition: "all 0.15s ease",
+    color: colors.text,
+  },
+  suggestionChipAdded: {
+    border: `2px solid ${colors.correct}`,
+    background: `${colors.correct}18`,
+    color: colors.correct,
+    cursor: "default",
+  },
+  checkMark: { fontSize: "14px" },
+  noResults: {
+    color: colors.textMuted,
+    fontSize: "14px",
+    textAlign: "center",
+    padding: "20px",
+    width: "100%",
+  },
+  wordListGrid: {
+    display: "flex",
+    flexWrap: "wrap",
+    gap: "8px",
+    marginBottom: "16px",
+  },
+  wordListItem: {
+    display: "flex",
+    alignItems: "center",
+    gap: "6px",
+    padding: "8px 14px",
+    borderRadius: "10px",
+    background: `linear-gradient(135deg, ${colors.primary}12, ${colors.purple}12)`,
+    border: `1px solid ${colors.primary}25`,
+    animation: "popIn 0.2s ease",
+  },
+  wordListWord: {
+    fontFamily: "'Fredoka', sans-serif",
+    fontSize: "16px",
+    fontWeight: 600,
+    color: colors.text,
+    letterSpacing: "2px",
+  },
+  removeBtn: {
+    width: "22px",
+    height: "22px",
+    borderRadius: "50%",
+    border: "none",
+    background: "rgba(255,107,107,0.15)",
+    color: colors.primary,
+    fontSize: "12px",
+    cursor: "pointer",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    fontWeight: 700,
+    transition: "all 0.15s",
+  },
+  emptyList: {
+    color: colors.textMuted,
+    textAlign: "center",
+    padding: "20px",
+    fontSize: "15px",
+  },
+  playButton: {
+    width: "100%",
+    padding: "18px",
+    borderRadius: "14px",
+    border: "none",
+    background: `linear-gradient(135deg, ${colors.primary}, ${colors.primaryDark})`,
+    color: "#fff",
+    fontSize: "20px",
+    fontWeight: 700,
+    fontFamily: "'Fredoka', sans-serif",
+    cursor: "pointer",
+    boxShadow: `0 4px 16px ${colors.primary}40`,
+    transition: "all 0.2s ease",
+    letterSpacing: "0.5px",
+  },
+
+  // Play
+  playOuter: {
+    display: "flex",
+    maxWidth: "900px",
+    margin: "0 auto",
+    padding: "12px 16px",
+    gap: "16px",
+    alignItems: "flex-start",
+  },
+  wordBankSidebar: {
+    width: "160px",
+    flexShrink: 0,
+    background: colors.card,
+    borderRadius: "16px",
+    padding: "14px",
+    boxShadow: colors.shadow,
+    border: "1px solid rgba(0,0,0,0.04)",
+    position: "sticky",
+    top: "90px",
+  },
+  wordBankHeader: {
+    display: "flex",
+    alignItems: "center",
+    gap: "6px",
+    marginBottom: "10px",
+    paddingBottom: "8px",
+    borderBottom: `2px solid ${colors.border}`,
+  },
+  wordBankTitle: {
+    fontFamily: "'Fredoka', sans-serif",
+    fontSize: "15px",
+    fontWeight: 700,
+    color: colors.text,
+  },
+  wordBankList: {
+    display: "flex",
+    flexDirection: "column",
+    gap: "4px",
+    maxHeight: "50vh",
+    overflowY: "auto",
+  },
+  wordBankItem: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    padding: "8px 10px",
+    borderRadius: "8px",
+    background: "#F8F9FA",
+    transition: "all 0.2s ease",
+  },
+  wordBankItemFound: {
+    background: `${colors.correct}15`,
+    border: `1px solid ${colors.correct}40`,
+  },
+  wordBankWord: {
+    fontFamily: "'Fredoka', sans-serif",
+    fontSize: "16px",
+    fontWeight: 600,
+    letterSpacing: "2px",
+    color: colors.text,
+  },
+  playContainer: {
+    flex: 1,
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    gap: "10px",
+    minWidth: 0,
+  },
+  gridWrapper: {
+    display: "flex",
+    flexDirection: "column",
+    gap: "5px",
+    marginBottom: "4px",
+  },
+  row: {
+    display: "flex",
+    gap: "5px",
+    justifyContent: "center",
+  },
+  cell: {
+    width: "clamp(40px, 10vw, 50px)",
+    height: "clamp(40px, 10vw, 50px)",
+    borderRadius: "10px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    transition: "all 0.2s ease",
+  },
+  cellEmpty: {
+    border: `2px solid ${colors.border}`,
+    background: "#FAFAFA",
+  },
+  cellFilled: {
+    border: `2px solid ${colors.purple}`,
+    background: `${colors.purple}12`,
+  },
+  cellMatch: {
+    border: `3px solid ${colors.correct}`,
+    background: `${colors.correct}20`,
+    boxShadow: `0 0 12px ${colors.correct}40`,
+  },
+  matchHint: {
+    textAlign: "center",
+    padding: "8px 16px",
+    borderRadius: "10px",
+    background: `${colors.correct}15`,
+    border: `2px solid ${colors.correct}50`,
+    color: "#2D8A4E",
+    fontSize: "15px",
+    fontWeight: 700,
+    fontFamily: "'Fredoka', sans-serif",
+    animation: "gentlePulse 1.5s ease-in-out infinite",
+  },
+  cellCorrect: {
+    border: "none",
+    background: `linear-gradient(135deg, ${colors.correct}, #5BBF6A)`,
+    boxShadow: `0 2px 8px ${colors.correct}40`,
+  },
+  cellPresent: {
+    border: "none",
+    background: `linear-gradient(135deg, ${colors.present}, #FFC800)`,
+    boxShadow: `0 2px 8px ${colors.present}40`,
+  },
+  cellAbsent: {
+    border: "none",
+    background: `linear-gradient(135deg, ${colors.absent}, #B0BEC5)`,
+  },
+  cellLetter: {
+    fontFamily: "'Fredoka', sans-serif",
+    fontSize: "clamp(18px, 5vw, 26px)",
+    fontWeight: 700,
+    color: "#fff",
+    textShadow: "0 1px 2px rgba(0,0,0,0.1)",
+  },
+
+  // Keyboard
+  keyboard: {
+    display: "flex",
+    flexDirection: "column",
+    gap: "5px",
+    width: "100%",
+    maxWidth: "440px",
+  },
+  keyboardRow: {
+    display: "flex",
+    justifyContent: "center",
+    gap: "3px",
+  },
+  key: {
+    minWidth: "clamp(26px, 7vw, 36px)",
+    height: "clamp(40px, 10vw, 48px)",
+    borderRadius: "8px",
+    border: "none",
+    background: "#E8E8E8",
+    fontSize: "clamp(13px, 3vw, 16px)",
+    fontWeight: 700,
+    fontFamily: "'Fredoka', sans-serif",
+    cursor: "pointer",
+    color: colors.text,
+    transition: "all 0.1s ease",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    padding: "0 2px",
+    boxShadow: "0 2px 0 rgba(0,0,0,0.1)",
+  },
+  keyWide: {
+    minWidth: "clamp(44px, 10vw, 58px)",
+    fontSize: "clamp(14px, 3.5vw, 18px)",
+  },
+  keyEnter: {
+    background: `linear-gradient(135deg, ${colors.secondary}, ${colors.secondaryDark})`,
+    color: "#fff",
+  },
+  keyDelete: {
+    background: `linear-gradient(135deg, ${colors.primary}CC, ${colors.primaryDark})`,
+    color: "#fff",
+  },
+  keyCorrect: {
+    background: `linear-gradient(135deg, ${colors.correct}, #5BBF6A)`,
+    color: "#fff",
+  },
+  keyPresent: {
+    background: `linear-gradient(135deg, ${colors.present}, #FFC800)`,
+    color: "#fff",
+  },
+  keyAbsent: {
+    background: "#B0BEC5",
+    color: "#fff",
+  },
+  keyLesson: {
+    background: `linear-gradient(135deg, ${colors.purple}25, ${colors.purple}15)`,
+    border: `2.5px solid ${colors.purple}`,
+    color: colors.purple,
+    fontWeight: 800,
+    boxShadow: `0 2px 6px ${colors.purple}25`,
+  },
+  keyDimmed: {
+    opacity: 0.3,
+    background: "#E8E8E8",
+  },
+
+  // Result overlay
+  resultOverlay: {
+    position: "fixed",
+    top: 0, left: 0, right: 0, bottom: 0,
+    background: "rgba(0,0,0,0.4)",
+    backdropFilter: "blur(4px)",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    zIndex: 200,
+    padding: "20px",
+  },
+  resultCard: {
+    background: colors.card,
+    borderRadius: "24px",
+    padding: "36px 28px",
+    textAlign: "center",
+    maxWidth: "380px",
+    width: "100%",
+    boxShadow: colors.shadowLg,
+    position: "relative",
+    overflow: "hidden",
+  },
+  confettiContainer: {
+    position: "absolute",
+    top: 0, left: 0, right: 0, bottom: 0,
+    pointerEvents: "none",
+  },
+  resultEmoji: { fontSize: "56px", marginBottom: "12px" },
+  resultTitle: {
+    fontFamily: "'Fredoka', sans-serif",
+    fontSize: "28px",
+    fontWeight: 700,
+    color: colors.text,
+    marginBottom: "8px",
+  },
+  resultText: {
+    fontSize: "16px",
+    color: colors.textLight,
+    marginBottom: "20px",
+    lineHeight: 1.5,
+  },
+  nextButton: {
+    padding: "16px 36px",
+    borderRadius: "14px",
+    border: "none",
+    background: `linear-gradient(135deg, ${colors.secondary}, ${colors.secondaryDark})`,
+    color: "#fff",
+    fontSize: "18px",
+    fontWeight: 700,
+    fontFamily: "'Fredoka', sans-serif",
+    cursor: "pointer",
+    boxShadow: `0 4px 16px ${colors.secondary}40`,
+  },
+  backButton: {
+    marginTop: "8px",
+    padding: "10px 20px",
+    borderRadius: "10px",
+    border: `2px solid ${colors.border}`,
+    background: "transparent",
+    fontSize: "14px",
+    fontWeight: 600,
+    color: colors.textLight,
+    cursor: "pointer",
+    fontFamily: "'Nunito', sans-serif",
+  },
+
+  // Done
+  doneContainer: {
+    maxWidth: "500px",
+    margin: "0 auto",
+    padding: "20px 16px",
+  },
+  doneCard: {
+    background: colors.card,
+    borderRadius: "24px",
+    padding: "32px 24px",
+    boxShadow: colors.shadowLg,
+    textAlign: "center",
+  },
+  doneTitle: {
+    fontFamily: "'Fredoka', sans-serif",
+    fontSize: "32px",
+    fontWeight: 700,
+    color: colors.text,
+    margin: "8px 0 20px",
+  },
+  scoreBoard: {
+    display: "flex",
+    flexDirection: "column",
+    gap: "8px",
+    marginBottom: "20px",
+  },
+  scoreRow: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: "12px 16px",
+    borderRadius: "12px",
+    background: "#F8F9FA",
+  },
+  scoreWord: {
+    fontFamily: "'Fredoka', sans-serif",
+    fontSize: "18px",
+    fontWeight: 600,
+    letterSpacing: "2px",
+    color: colors.text,
+  },
+  scoreBadge: {
+    fontSize: "13px",
+    fontWeight: 700,
+    padding: "4px 10px",
+    borderRadius: "8px",
+  },
+  scoreBadgeWon: {
+    background: `${colors.correct}20`,
+    color: "#4CAF50",
+  },
+  scoreBadgeLost: {
+    background: `${colors.present}20`,
+    color: "#F59E0B",
+  },
+  doneStats: {
+    display: "flex",
+    justifyContent: "center",
+    gap: "24px",
+    marginBottom: "20px",
+  },
+  statBox: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+  },
+  statNum: {
+    fontFamily: "'Fredoka', sans-serif",
+    fontSize: "36px",
+    fontWeight: 700,
+    color: colors.primary,
+    lineHeight: 1,
+  },
+  statLabel: {
+    fontSize: "13px",
+    color: colors.textLight,
+    fontWeight: 600,
+    marginTop: "4px",
+  },
+};
+
+
+    var root = ReactDOM.createRoot(document.getElementById("root"));
+    root.render(React.createElement(WordleForLearners));
+  </script>
+</body>
+</html>
